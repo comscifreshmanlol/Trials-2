@@ -7,3 +7,4 @@ print("You can buy " + str(total_kwek_kwek) + " pieces of kwek kwek with your mo
 
 leftover_money = amount % price
 print("And you will have " + str(leftover_money) + " left.")
+print("Eat well hehe")
