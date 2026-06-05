@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kwek Kwek Calculator</title>
-    <!-- Correct PyScript Links -->
-    <link rel="stylesheet" href="https://pyscript.net" />
-    <script type="module" src="https://pyscript.net"></script>
+    <!-- Stable PyScript Engine Links -->
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css" />
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 </head>
 <body style="font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;">
 
     <h1>Welcome to the Kwek Kwek Calculator! 🥚</h1>
     <p>Find out how many pieces of kwek kwek you can buy.</p>
 
-    <!-- HTML Input Boxes for the user to type into -->
+    <!-- Inputs -->
     <div style="margin-bottom: 15px;">
         <label>How much money do you have right now? </label><br>
         <input type="number" id="user_money" value="100">
@@ -24,49 +24,48 @@
         <input type="number" id="kwek_price" value="5">
     </div>
 
-    <!-- Clicking this button runs the Python function -->
-    <button py-click="calculate_kwek" style="padding: 8px 15px; background-color: #ff6600; color: white; border: none; cursor: pointer; border-radius: 4px;">
+    <!-- The Standard HTML Button -->
+    <button id="calc_btn" style="padding: 8px 15px; background-color: #ff6600; color: white; border: none; cursor: pointer; border-radius: 4px;">
         Calculate
     </button>
 
     <hr>
 
-    <!-- This is where Python will display the results -->
+    <!-- Results Area -->
     <div id="output" style="white-space: pre-line; font-weight: bold; color: #333; line-height: 1.6;"></div>
 
-    <!-- Your Python Logic -->
+    <!-- Python Script -->
     <script type="py">
         from pyscript import document
+        from pyodide.ffi import create_proxy
 
         def calculate_kwek(event):
-            # 1. Grab values from the HTML input boxes
+            # 1. Grab values safely from the HTML fields
             money_input = document.querySelector("#user_money").value
             price_input = document.querySelector("#kwek_price").value
 
-            # 2. Convert to integers safely
             amount = int(money_input)
             price = int(price_input)
 
-            # 3. Perform your math logic
+            # 2. Logic Check
             if price <= 0:
                 result_text = "Price must be greater than 0!"
             else:
                 total_kwek_kwek = amount // price
                 leftover_money = amount % price
                 
-                # 4. Create the final text string
                 result_text = f"You can buy {total_kwek_kwek} pieces of kwek kwek with your money.\n"
                 result_text += f"And you will have ₱{leftover_money} left.\n"
                 result_text += "Eat well hehe 🧡"
 
-            # 5. Display the result inside our 'output' div tag
-            output_div = document.querySelector("#output")
-            output_div.innerText = result_text
+            # 3. Output back to HTML
+            document.querySelector("#output").innerText = result_text
+
+        # 4. Attach the Python function directly to the HTML button's click event listener
+        button = document.querySelector("#calc_btn")
+        button.addEventListener("click", create_proxy(calculate_kwek))
     </script>
 
 </body>
 </html>
 
-
-</body>
-</html>
